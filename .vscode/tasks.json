@@ -78,6 +78,8 @@
       "default": "10.10.0.6"
     },
     {
+      // HERE you can add multiple stlink ids if you have multiple boards with the same software
+      // and you can add them some fancy names.
       "id": "stlinkID",
       "type": "pickString",
       "description": "Enter the ST-LINK ID to connect to",

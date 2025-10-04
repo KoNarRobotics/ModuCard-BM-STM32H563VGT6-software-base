@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+# git submodule update --init --recursive
 
 ./src/can_constants/generate-files.sh -v
 
