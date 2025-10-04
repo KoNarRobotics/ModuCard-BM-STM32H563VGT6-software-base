@@ -58,7 +58,11 @@ Status init_board(se::SimpleTask &task, void *pvParameters) {
   //                                             can_callback_bmp280_get_status,
   //                                             bmp280.get()));
 
-  return se::Status::OK();
+  ///////////////////////////////////////////////////////////////////////////
+  // HERE ADD MORE OF YOUR INIT CODE
+
+  ///////////////////////////////////////////////////////////////////////////
+  return stat;
 }
 
 Status task_blink_func(se::SimpleTask &task, void *pvParameters) {
@@ -69,7 +73,6 @@ Status task_blink_func(se::SimpleTask &task, void *pvParameters) {
     return task.task_get_status();
   }
 
-  gpio_user_led_1.toggle();
   return Status::OK();
 }
 
@@ -79,7 +82,7 @@ void main_prog() {
   HAL_NVIC_EnableIRQ(TIM6_IRQn);
   HAL_TIM_Base_Start_IT(&htim6);
 
-  // INIT USB COm port
+  // INIT USB CO< port
   MX_USB_PCD_Init();
   MX_USB_Device_Init();
 
@@ -96,26 +99,49 @@ void main_prog() {
   uart5->hardware_start();
 
   // INIT FDCAN HANDLER
-  FDCAN_FilterTypeDef sFilterConfig = {};
-  sFilterConfig.IdType = FDCAN_EXTENDED_ID;
-  sFilterConfig.FilterIndex = 0;
-  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  sFilterConfig.FilterID1 = 0; // 0x915;
-  sFilterConfig.FilterID2 = 0; // 0x1FFFFFFF; // all have to match
-  // sFilterConfig.RxBufferIndex       = 0;
-  // sFilterConfig.IsCalibrationMsg    = 0;
+  FDCAN_FilterTypeDef sFilterConfig1 = {};
+  sFilterConfig1.IdType = FDCAN_EXTENDED_ID;
+  sFilterConfig1.FilterIndex = 0;
+  sFilterConfig1.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig1.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig1.FilterID1 = 0; // 0x915;
+  sFilterConfig1.FilterID2 = 0; // 0x1FFFFFFF; // all have to match
+  // sFilterConfig1.RxBufferIndex       = 0;
+  // sFilterConfig1.IsCalibrationMsg    = 0;
 
-  se::FDcanFilterConfig filter_config;
-  filter_config.filters.push_back(sFilterConfig);
-  filter_config.fifo_number = se::FDCAN_FIFO::FDCAN_FIFO0;
-  filter_config.globalFilter_NonMatchingStd = FDCAN_REJECT;
-  filter_config.globalFilter_NonMatchingExt = FDCAN_REJECT;
-  filter_config.globalFilter_RejectRemoteStd = FDCAN_FILTER_REMOTE;
-  filter_config.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
+  se::FDcanFilterConfig filter_config1;
+  filter_config1.filters.push_back(sFilterConfig1);
+  filter_config1.fifo_number = se::FDCAN_FIFO::FDCAN_FIFO0;
+  filter_config1.globalFilter_NonMatchingStd = FDCAN_REJECT;
+  filter_config1.globalFilter_NonMatchingExt = FDCAN_REJECT;
+  filter_config1.globalFilter_RejectRemoteStd = FDCAN_FILTER_REMOTE;
+  filter_config1.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
   STMEPIC_ASSING_TO_OR_HRESET(
-      fdcan1, se::FDCAN::Make(hfdcan1, filter_config, nullptr, nullptr));
+      fdcan1, se::FDCAN::Make(hfdcan1, filter_config1, nullptr, nullptr));
+
+  FDCAN_FilterTypeDef sFilterConfig2 = {};
+  sFilterConfig2.IdType = FDCAN_EXTENDED_ID;
+  sFilterConfig2.FilterIndex = 1;
+  sFilterConfig2.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig2.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig2.FilterID1 = 0; // 0x915;
+  sFilterConfig2.FilterID2 = 0; // 0x1FFFFFFF; // all have to match
+  // sFilterConfig2.RxBufferIndex       = 0;
+  // sFilterConfig2.IsCalibrationMsg    = 0;
+
+  se::FDcanFilterConfig filter_config2;
+  filter_config2.filters.push_back(sFilterConfig2);
+  filter_config2.fifo_number = se::FDCAN_FIFO::FDCAN_FIFO0;
+  filter_config2.globalFilter_NonMatchingStd = FDCAN_REJECT;
+  filter_config2.globalFilter_NonMatchingExt = FDCAN_REJECT;
+  filter_config2.globalFilter_RejectRemoteStd = FDCAN_FILTER_REMOTE;
+  filter_config2.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
+
+  STMEPIC_ASSING_TO_OR_HRESET(
+      fdcan2, se::FDCAN::Make(hfdcan2, filter_config2, nullptr, nullptr));
+
   fdcan1->hardware_start();
+  fdcan2->hardware_start();
 
   // START MAIN TASK
   task_blink.task_init(task_blink_func, nullptr, 100, init_board, 3500, 2,
