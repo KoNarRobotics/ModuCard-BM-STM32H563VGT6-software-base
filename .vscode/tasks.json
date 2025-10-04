@@ -1,0 +1,109 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Copy-reset-config",
+      "type": "shell",
+      "command": "scp",
+      "args": [
+        "${workspaceFolder}/openocd-reset.conf",
+        "${input:remoteUser}@${input:remoteIP}:openocd-reset.conf"
+      ]
+    },
+    {
+      "label": "Start-Remote-OpenOCD",
+      "type": "shell",
+      // "dependsOn": "getPort",
+      "command": "ssh",
+      "args": [
+        "-t",
+        "${input:remoteUser}@${input:remoteIP}",
+        "'openocd  -c \"bindto 0.0.0.0\" -c \"gdb_port ${input:getPort}\" -f interface/stlink-dap.cfg -f target/stm32h5x.cfg -c \"hla_serial ${input:stlinkID}\" -c \"init; arm semihosting enable\"'"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": [
+          {
+            "regexp": ".",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Info : Listening on port",
+          "endsPattern": "for gdb connections"
+        }
+      }
+    },
+    {
+      "label": "Restart MCU",
+      "type": "shell",
+      "dependsOn": "Copy-reset-config",
+      "command": "ssh",
+      "args": [
+        "${input:remoteUser}@${input:remoteIP}",
+        "'openocd -f ~/openocd-reset.conf'"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "remoteUser",
+      "type": "pickString",
+      "description": "Enter the username for the remote machine",
+      "options": [
+        "ubuntu",
+        "orangepi"
+      ],
+      "default": "ubuntu"
+    },
+    {
+      "id": "remoteIP",
+      "type": "pickString",
+      "description": "Enter the IP address of the remote machine",
+      "options": [
+        {
+          "label": "VPN",
+          "value": "10.10.0.6"
+        },
+        {
+          "label": "Local",
+          "value": "192.168.20.2"
+        }
+      ],
+      "default": "10.10.0.6"
+    },
+    {
+      "id": "stlinkID",
+      "type": "pickString",
+      "description": "Enter the ST-LINK ID to connect to",
+      "options": [
+        {
+          "label": "Nav module rev1",
+          "value": "49FF6B064978785130411667"
+        },
+        {
+          "label": "Nav module rev2",
+          "value": "49FF6D064978785146441667"
+        }
+      ],
+      "default": "49FF6D064978785146441667"
+    },
+    {
+      "id": "getPort",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "cat .vscode/gdb-port.txt",
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "WORKSPACE": "${workspaceFolder[0]}",
+        }
+      }
+    }
+  ]
+}

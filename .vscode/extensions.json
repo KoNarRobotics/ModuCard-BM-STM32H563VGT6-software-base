@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "augustocdias.tasks-shell-input",
+    "ms-vscode.cmake-tools",
+    "marus25.cortex-debug",
+    "cschlosser.doxdocgen",
+    "ms-vscode.cpptools"
+  ]
+}

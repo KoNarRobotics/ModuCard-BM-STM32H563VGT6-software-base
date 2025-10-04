@@ -1,0 +1,9 @@
+[submodule "src/StmEpic"]
+	path = src/StmEpic
+	url = git@github.com:X-Lemon-X/StmEpic.git
+[submodule "src/stm32-mw-usb-device"]
+	path = src/stm32-mw-usb-device
+	url = git@github.com:KoNarRobotics/stm32-mw-usb-device.git
+[submodule "src/can_constants"]
+	path = src/can_constants
+	url = git@github.com:KoNarRobotics/can_constants.git

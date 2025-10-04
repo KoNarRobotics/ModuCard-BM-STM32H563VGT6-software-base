@@ -1,0 +1,147 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Remote Launch OpenOCD",
+      "type": "cortex-debug",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "request": "launch",
+      "servertype": "external",
+      // This may need to be arm-none-eabi-gdb depending on your system
+      "gdbPath": "arm-none-eabi-gdb",
+      // Connect to an already running OpenOCD instance
+      "gdbTarget": "${input:remoteIP}:${input:getPort}",
+      //"runToMain": true,
+      "runToEntryPoint": "main",
+      // "serialNumber": "49FF6B064978785130411667", // serial number of the ST-Link have to be placed in task.json
+      // Work around for stopping at main on restart
+      "postRestartCommands": [
+        "break main",
+        "continue"
+      ],
+      "preLaunchTask": "Start-Remote-OpenOCD"
+    },
+    {
+      "name": "Remote Attach OpenOCD",
+      "type": "cortex-debug",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "request": "attach",
+      "servertype": "external",
+      // This may need to be arm-none-eabi-gdb depending on your system
+      "gdbPath": "arm-none-eabi-gdb",
+      // Connect to an already running OpenOCD instance
+      "gdbTarget": "${input:remoteIP}:${input:getPort}",
+      //"runToMain": true,
+      "runToEntryPoint": "main",
+      // Work around for stopping at main on restart
+      "postRestartCommands": [
+        "break main",
+        "continue"
+      ],
+      "preLaunchTask": "Start-Remote-OpenOCD"
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "name": "Local Launch OpenOCD",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": [
+        "${workspaceFolder}/stlink-dap.cfg",
+        "${workspaceFolder}/stm32h5x.cfg"
+      ],
+      "serverArgs": [
+        "-c",
+        "init; arm semihosting enable"
+      ],
+      "runToEntryPoint": "main",
+      // "showDevDebugOutput": "both",
+      "svdFile": "${workspaceFolder}/STM32H563.svd",
+      "serialNumber": "49FF6D064978785146441667",
+      "breakAfterReset": false
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "name": "Local Attach OpenOCD",
+      "request": "attach",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": [
+        "${workspaceFolder}/stlink-dap.cfg",
+        "${workspaceFolder}/stm32h5x.cfg"
+      ],
+      "serverArgs": [
+        "-c",
+        "init; arm semihosting enable"
+      ],
+      "runToEntryPoint": "main",
+      // "showDevDebugOutput": "both",
+      "svdFile": "${workspaceFolder}/STM32H563.svd",
+      "serialNumber": "49FF6D064978785146441667",
+      "breakAfterReset": false
+    },
+    {
+      "name": "Launch ST-GDB",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "servertype": "stlink",
+      // "serverArgs":
+      // [
+      // "-s",
+      // "-m", "0",
+      // "-k",
+      // "--frequency", "4000",
+      // "-el ${workspaceFolder}/build/firmware.stldr"
+      // ],
+      // "device":"STM32H750VBT6" ,
+      // "svdFile": "${workspaceFolder}/STM32H750.svd",
+      "serialNumber": "49FF6D064978785146441667"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "remoteIP",
+      "type": "pickString",
+      "description": "Enter the IP address of the remote machine",
+      "options": [
+        {
+          "label": "VPN",
+          "value": "10.10.0.6"
+        },
+        {
+          "label": "Local",
+          "value": "192.168.20.2"
+        }
+      ],
+      "default": "10.10.0.6"
+    },
+    {
+      "id": "remotePort",
+      "type": "promptString",
+      "description": "Enter the port number for the gdb",
+      "default": "50000"
+    },
+    {
+      "id": "getPort",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "shuf -i 50001-59999 -n 1 > .vscode/gdb-port.txt && cat .vscode/gdb-port.txt",
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "WORKSPACE": "${workspaceFolder[0]}",
+        }
+      }
+    }
+  ]
+}
