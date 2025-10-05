@@ -5,9 +5,12 @@
 #include "fdcan.hpp"
 #include "logger.hpp"
 #include "main.hpp"
+#include "random_number_generator.hpp"
+#include "sha256.hpp"
 #include "simple_task.hpp"
 #include "uart.hpp"
 #include "usbd_cdc_if.h"
+#include "w25q_mem.hpp"
 
 std::shared_ptr<se::UART> uart5 = nullptr;
 std::shared_ptr<se::FDCAN> fdcan1 = nullptr;
@@ -61,6 +64,18 @@ Status init_board(se::SimpleTask &task, void *pvParameters) {
   ///////////////////////////////////////////////////////////////////////////
   // HERE ADD MORE OF YOUR INIT CODE
 
+  se::W25qOctoSpi w25q(hospi1);
+  auto a = w25q.W25Q_Init();
+
+  uint8_t byte = 0x65;
+  uint8_t byte_read = 0;
+  uint8_t in_page_shift = 0;
+  uint8_t page_number = 0;
+  // write data
+  w25q.W25Q_ProgramByte(byte, in_page_shift, page_number);
+  // read data
+  w25q.W25Q_ReadByte(&byte_read, in_page_shift, page_number);
+
   ///////////////////////////////////////////////////////////////////////////
   return stat;
 }
@@ -92,6 +107,9 @@ void main_prog() {
                         std::to_string(VERSION_BUILD);
   se::Logger::get_instance().init(se::LOG_LEVEL::LOG_LEVEL_DEBUG, true,
                                   TEMPLATE_Transmit, false, version);
+
+  stmepic::algorithm::SHA256::get_instance().init(hhash);
+  stmepic::algorithm::RandomNumberGenerator::get_instance().init(hrng);
 
   // INIT UART HANDLERS
   STMEPIC_ASSING_TO_OR_HRESET(uart5,

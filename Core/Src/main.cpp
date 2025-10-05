@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
- ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2025 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -93,10 +93,11 @@ static void MX_OCTOSPI1_Init(void);
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
-int main(void) {
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
 
   /* USER CODE BEGIN 1 */
 
@@ -104,8 +105,7 @@ int main(void) {
 
   /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick.
-   */
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
   /* USER CODE BEGIN Init */
@@ -140,7 +140,7 @@ int main(void) {
 
   /* Init scheduler */
   osKernelInitialize();
-  main_prog();
+main_prog();
 
   /* Call init function for freertos objects (in app_freertos.c) */
 
@@ -151,7 +151,8 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1) {
+  while (1)
+  {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -160,25 +161,24 @@ int main(void) {
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-   */
+  */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
-  while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {
-  }
+  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
 
   /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
-  RCC_OscInitStruct.OscillatorType =
-      RCC_OSCILLATORTYPE_HSI48 | RCC_OSCILLATORTYPE_HSE;
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -191,39 +191,42 @@ void SystemClock_Config(void) {
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1_VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1_VCORANGE_WIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
     Error_Handler();
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
-                                RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2 |
-                                RCC_CLOCKTYPE_PCLK3;
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
+                              |RCC_CLOCKTYPE_PCLK3;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB3CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  {
     Error_Handler();
   }
 
   /** Configure the programming delay
-   */
+  */
   __HAL_FLASH_SET_PROGRAM_DELAY(FLASH_PROGRAMMING_DELAY_2);
 }
 
 /**
- * @brief Peripherals Common Clock Configuration
- * @retval None
- */
-void PeriphCommonClock_Config(void) {
+  * @brief Peripherals Common Clock Configuration
+  * @retval None
+  */
+void PeriphCommonClock_Config(void)
+{
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
   /** Initializes the peripherals clock
-   */
+  */
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_FDCAN;
   PeriphClkInitStruct.PLL2.PLL2Source = RCC_PLL2_SOURCE_HSE;
   PeriphClkInitStruct.PLL2.PLL2M = 3;
@@ -236,17 +239,19 @@ void PeriphCommonClock_Config(void) {
   PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
   PeriphClkInitStruct.PLL2.PLL2ClockOut = RCC_PLL2_DIVQ;
   PeriphClkInitStruct.FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL2Q;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  {
     Error_Handler();
   }
 }
 
 /**
- * @brief DCACHE1 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_DCACHE1_Init(void) {
+  * @brief DCACHE1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_DCACHE1_Init(void)
+{
 
   /* USER CODE BEGIN DCACHE1_Init 0 */
 
@@ -257,20 +262,23 @@ static void MX_DCACHE1_Init(void) {
   /* USER CODE END DCACHE1_Init 1 */
   hdcache1.Instance = DCACHE1;
   hdcache1.Init.ReadBurstType = DCACHE_READ_BURST_WRAP;
-  if (HAL_DCACHE_Init(&hdcache1) != HAL_OK) {
+  if (HAL_DCACHE_Init(&hdcache1) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN DCACHE1_Init 2 */
 
   /* USER CODE END DCACHE1_Init 2 */
+
 }
 
 /**
- * @brief FDCAN1 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_FDCAN1_Init(void) {
+  * @brief FDCAN1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_FDCAN1_Init(void)
+{
 
   /* USER CODE BEGIN FDCAN1_Init 0 */
 
@@ -297,20 +305,23 @@ static void MX_FDCAN1_Init(void) {
   hfdcan1.Init.StdFiltersNbr = 0;
   hfdcan1.Init.ExtFiltersNbr = 1;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK) {
+  if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
 
   /* USER CODE END FDCAN1_Init 2 */
+
 }
 
 /**
- * @brief FDCAN2 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_FDCAN2_Init(void) {
+  * @brief FDCAN2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_FDCAN2_Init(void)
+{
 
   /* USER CODE BEGIN FDCAN2_Init 0 */
 
@@ -337,20 +348,23 @@ static void MX_FDCAN2_Init(void) {
   hfdcan2.Init.StdFiltersNbr = 0;
   hfdcan2.Init.ExtFiltersNbr = 2;
   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK) {
+  if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN2_Init 2 */
 
   /* USER CODE END FDCAN2_Init 2 */
+
 }
 
 /**
- * @brief GPDMA1 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_GPDMA1_Init(void) {
+  * @brief GPDMA1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPDMA1_Init(void)
+{
 
   /* USER CODE BEGIN GPDMA1_Init 0 */
 
@@ -360,10 +374,10 @@ static void MX_GPDMA1_Init(void) {
   __HAL_RCC_GPDMA1_CLK_ENABLE();
 
   /* GPDMA1 interrupt Init */
-  HAL_NVIC_SetPriority(GPDMA1_Channel0_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(GPDMA1_Channel0_IRQn);
-  HAL_NVIC_SetPriority(GPDMA1_Channel1_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(GPDMA1_Channel1_IRQn);
+    HAL_NVIC_SetPriority(GPDMA1_Channel0_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(GPDMA1_Channel0_IRQn);
+    HAL_NVIC_SetPriority(GPDMA1_Channel1_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(GPDMA1_Channel1_IRQn);
 
   /* USER CODE BEGIN GPDMA1_Init 1 */
 
@@ -371,14 +385,16 @@ static void MX_GPDMA1_Init(void) {
   /* USER CODE BEGIN GPDMA1_Init 2 */
 
   /* USER CODE END GPDMA1_Init 2 */
+
 }
 
 /**
- * @brief HASH Initialization Function
- * @param None
- * @retval None
- */
-static void MX_HASH_Init(void) {
+  * @brief HASH Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_HASH_Init(void)
+{
 
   /* USER CODE BEGIN HASH_Init 0 */
 
@@ -390,20 +406,23 @@ static void MX_HASH_Init(void) {
   hhash.Instance = HASH;
   hhash.Init.DataType = HASH_NO_SWAP;
   hhash.Init.Algorithm = HASH_ALGOSELECTION_SHA256;
-  if (HAL_HASH_Init(&hhash) != HAL_OK) {
+  if (HAL_HASH_Init(&hhash) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN HASH_Init 2 */
 
   /* USER CODE END HASH_Init 2 */
+
 }
 
 /**
- * @brief ICACHE Initialization Function
- * @param None
- * @retval None
- */
-static void MX_ICACHE_Init(void) {
+  * @brief ICACHE Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ICACHE_Init(void)
+{
 
   /* USER CODE BEGIN ICACHE_Init 0 */
 
@@ -414,21 +433,24 @@ static void MX_ICACHE_Init(void) {
   /* USER CODE END ICACHE_Init 1 */
 
   /** Enable instruction cache (default 2-ways set associative cache)
-   */
-  if (HAL_ICACHE_Enable() != HAL_OK) {
+  */
+  if (HAL_ICACHE_Enable() != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN ICACHE_Init 2 */
 
   /* USER CODE END ICACHE_Init 2 */
+
 }
 
 /**
- * @brief OCTOSPI1 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_OCTOSPI1_Init(void) {
+  * @brief OCTOSPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_OCTOSPI1_Init(void)
+{
 
   /* USER CODE BEGIN OCTOSPI1_Init 0 */
 
@@ -447,26 +469,29 @@ static void MX_OCTOSPI1_Init(void) {
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
   hospi1.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
-  hospi1.Init.ClockPrescaler = 0;
+  hospi1.Init.ClockPrescaler = 10;
   hospi1.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_NONE;
   hospi1.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_DISABLE;
   hospi1.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
   hospi1.Init.DelayBlockBypass = HAL_XSPI_DELAY_BLOCK_BYPASS;
   hospi1.Init.Refresh = 0;
-  if (HAL_XSPI_Init(&hospi1) != HAL_OK) {
+  if (HAL_XSPI_Init(&hospi1) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN OCTOSPI1_Init 2 */
 
   /* USER CODE END OCTOSPI1_Init 2 */
+
 }
 
 /**
- * @brief RNG Initialization Function
- * @param None
- * @retval None
- */
-static void MX_RNG_Init(void) {
+  * @brief RNG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RNG_Init(void)
+{
 
   /* USER CODE BEGIN RNG_Init 0 */
 
@@ -477,20 +502,23 @@ static void MX_RNG_Init(void) {
   /* USER CODE END RNG_Init 1 */
   hrng.Instance = RNG;
   hrng.Init.ClockErrorDetection = RNG_CED_ENABLE;
-  if (HAL_RNG_Init(&hrng) != HAL_OK) {
+  if (HAL_RNG_Init(&hrng) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN RNG_Init 2 */
 
   /* USER CODE END RNG_Init 2 */
+
 }
 
 /**
- * @brief TIM6 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_TIM6_Init(void) {
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
 
   /* USER CODE BEGIN TIM6_Init 0 */
 
@@ -506,25 +534,29 @@ static void MX_TIM6_Init(void) {
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 999;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim6) != HAL_OK) {
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
     Error_Handler();
   }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK) {
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
+
 }
 
 /**
- * @brief UART5 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_UART5_Init(void) {
+  * @brief UART5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART5_Init(void)
+{
 
   /* USER CODE BEGIN UART5_Init 0 */
 
@@ -544,31 +576,35 @@ static void MX_UART5_Init(void) {
   huart5.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart5.Init.ClockPrescaler = UART_PRESCALER_DIV1;
   huart5.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart5) != HAL_OK) {
+  if (HAL_UART_Init(&huart5) != HAL_OK)
+  {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart5, UART_TXFIFO_THRESHOLD_1_8) !=
-      HAL_OK) {
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart5, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart5, UART_RXFIFO_THRESHOLD_1_8) !=
-      HAL_OK) {
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart5, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
     Error_Handler();
   }
-  if (HAL_UARTEx_DisableFifoMode(&huart5) != HAL_OK) {
+  if (HAL_UARTEx_DisableFifoMode(&huart5) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN UART5_Init 2 */
 
   /* USER CODE END UART5_Init 2 */
+
 }
 
 /**
- * @brief USB Initialization Function
- * @param None
- * @retval None
- */
-void MX_USB_PCD_Init(void) {
+  * @brief USB Initialization Function
+  * @param None
+  * @retval None
+  */
+void MX_USB_PCD_Init(void)
+{
 
   /* USER CODE BEGIN USB_Init 0 */
 
@@ -588,23 +624,26 @@ void MX_USB_PCD_Init(void) {
   hpcd_USB_DRD_FS.Init.vbus_sensing_enable = DISABLE;
   hpcd_USB_DRD_FS.Init.bulk_doublebuffer_enable = DISABLE;
   hpcd_USB_DRD_FS.Init.iso_singlebuffer_enable = DISABLE;
-  if (HAL_PCD_Init(&hpcd_USB_DRD_FS) != HAL_OK) {
+  if (HAL_PCD_Init(&hpcd_USB_DRD_FS) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN USB_Init 2 */
 
   /* USER CODE END USB_Init 2 */
+
 }
 
 /**
- * @brief GPIO Initialization Function
- * @param None
- * @retval None
- */
-static void MX_GPIO_Init(void) {
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
-  /* USER CODE END MX_GPIO_Init_1 */
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
@@ -615,25 +654,20 @@ static void MX_GPIO_Init(void) {
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE,
-                    USER_LED_1_Pin | USER_LED_2_Pin | STATUS_LED_Pin |
-                        IMU_EXT_NRESET_Pin,
-                    GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, USER_LED_1_Pin|USER_LED_2_Pin|STATUS_LED_Pin|IMU_EXT_NRESET_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(BOOT_EN_GPIO_Port, BOOT_EN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : USER_LED_1_Pin USER_LED_2_Pin STATUS_LED_Pin
-   * IMU_EXT_NRESET_Pin */
-  GPIO_InitStruct.Pin =
-      USER_LED_1_Pin | USER_LED_2_Pin | STATUS_LED_Pin | IMU_EXT_NRESET_Pin;
+  /*Configure GPIO pins : USER_LED_1_Pin USER_LED_2_Pin STATUS_LED_Pin IMU_EXT_NRESET_Pin */
+  GPIO_InitStruct.Pin = USER_LED_1_Pin|USER_LED_2_Pin|STATUS_LED_Pin|IMU_EXT_NRESET_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : USR_BUTTON_Pin IMU_FSYNC_Pin IMU_INT_Pin */
-  GPIO_InitStruct.Pin = USR_BUTTON_Pin | IMU_FSYNC_Pin | IMU_INT_Pin;
+  GPIO_InitStruct.Pin = USR_BUTTON_Pin|IMU_FSYNC_Pin|IMU_INT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -645,8 +679,8 @@ static void MX_GPIO_Init(void) {
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(BOOT_EN_GPIO_Port, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-  /* USER CODE END MX_GPIO_Init_2 */
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -654,40 +688,42 @@ static void MX_GPIO_Init(void) {
 /* USER CODE END 4 */
 
 /**
- * @brief  Period elapsed callback in non blocking mode
- * @note   This function is called  when TIM7 interrupt took place, inside
- * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
- * a global variable "uwTick" used as application time base.
- * @param  htim : TIM handle
- * @retval None
- */
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM7 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void Error_Handler(void) {
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  while (1) {
+  while (1)
+  {
   }
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t *file, uint32_t line) {
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line
-     number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file,
-     line) */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

@@ -11,6 +11,7 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD 20)
 
 
 # Define the build type
@@ -75,6 +76,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/quadspi/Dev_Inf.c
   # src/quadspi/Loader_Src.c
   # src/quadspi/W25Q128.c
+
+  src/quadspi/w25q_mem.cpp
 
 
   # STM32 USB Package

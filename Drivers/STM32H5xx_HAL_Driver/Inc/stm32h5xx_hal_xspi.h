@@ -156,7 +156,7 @@ typedef struct
   uint32_t AlternateBytes;            /*!< It contains the alternate bytes to be sent to the device.
                                            This parameter can be a value between 0 and 0xFFFFFFFF */
   uint32_t AlternateBytesMode;        /*!< It indicates the mode of the alternate bytes.
-                                           This parameter can be a value of @ref XSPI_AlternateBytesMode */
+                                           This parameter can be a value of @ref  */
   uint32_t AlternateBytesWidth;       /*!< It indicates the width of the alternate bytes.
                                            This parameter can be a value of @ref XSPI_AlternateBytesWidth */
   uint32_t AlternateBytesDTRMode;     /*!< It enables or not the DTR mode for the alternate bytes phase.

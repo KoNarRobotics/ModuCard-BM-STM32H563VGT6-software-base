@@ -74,7 +74,13 @@
     "source_location": "c",
     "complex": "cpp",
     "usb_device.h": "c",
-    "text_encoding": "cpp"
+    "text_encoding": "cpp",
+    "w25q128.h": "c",
+    "hash_map": "cpp",
+    "hash_set": "cpp",
+    "shared_mutex": "cpp",
+    "cfenv": "cpp",
+    "typeindex": "cpp"
   },
   "editor.formatOnSave": true,
   "python.autoComplete.extraPaths": [
