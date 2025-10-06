@@ -16,7 +16,7 @@
 
 namespace se = stmepic;
 
-extern std::shared_ptr<moducard::ModuCardBoard> modu_card;
+extern std::shared_ptr<moducard::ModuCardBoard> modu_card_board;
 
 void config_usb_device();
 

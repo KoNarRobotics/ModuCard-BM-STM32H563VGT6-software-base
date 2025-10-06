@@ -15,7 +15,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // Board settings
-std::shared_ptr<moducard::ModuCardBoard> modu_card;
+std::shared_ptr<moducard::ModuCardBoard> modu_card_board;
 static constexpr uint32_t CAN_MODULE_BASE_ADDRESS = 0x300;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,8 +145,8 @@ void main_prog() {
   STMEPIC_NONE_OR_HRESET(fdcan2->hardware_start());
 
   STMEPIC_ASSING_TO_OR_HRESET(
-      modu_card,
+      modu_card_board,
       moducard::ModuCardBoard::Make(CAN_MODULE_BASE_ADDRESS, gpio_status_led,
                                     fdcan1, fdcan2, init_board));
-  STMEPIC_NONE_OR_HRESET(modu_card->device_start());
+  STMEPIC_NONE_OR_HRESET(modu_card_board->device_start());
 }
