@@ -7,3 +7,6 @@
 [submodule "src/can_constants"]
 	path = src/can_constants
 	url = git@github.com:KoNarRobotics/can_constants.git
+[submodule "src/ModuCard-software-base"]
+	path = src/ModuCard-software-base
+	url = git@github.com:KoNarRobotics/ModuCard-software-base.git

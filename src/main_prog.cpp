@@ -5,6 +5,7 @@
 #include "fdcan.hpp"
 #include "logger.hpp"
 #include "main.hpp"
+#include "modu_card.hpp"
 #include "random_number_generator.hpp"
 #include "sha256.hpp"
 #include "simple_task.hpp"
@@ -12,6 +13,15 @@
 #include "usbd_cdc_if.h"
 #include "w25q_mem.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// Board settings
+std::shared_ptr<moducard::ModuCardBoard> modu_card;
+static constexpr uint32_t CAN_MODULE_BASE_ADDRESS = 0x300;
+
+////////////////////////////////////////////////////////////////////////////////
+// HARDWARE INTERFACES
+
+// base hardware interfaces DON'T TOUCH
 std::shared_ptr<se::UART> uart5 = nullptr;
 std::shared_ptr<se::FDCAN> fdcan1 = nullptr;
 std::shared_ptr<se::FDCAN> fdcan2 = nullptr;
@@ -22,16 +32,9 @@ se::GpioPin gpio_user_led_2(*USER_LED_2_GPIO_Port, USER_LED_2_Pin);
 se::GpioPin gpio_status_led(*STATUS_LED_GPIO_Port, STATUS_LED_Pin);
 se::GpioPin gpio_usr_button(*USR_BUTTON_GPIO_Port, USR_BUTTON_Pin);
 
-se::SimpleTask task_blink;
+////////////////////////////////////////////////////////////////////////////////
+// REST OF THE CODE
 
-/**
- * @brief  Period elapsed callback in non blocking mode
- * @note   This function is called  when TIM7 interrupt took place, inside
- * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
- * a global variable "uwTick" used as application time base.
- * @param  htim : TIM handle
- * @retval None
- */
 extern "C" {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM6) {
@@ -45,21 +48,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 }
 
-Status init_board(se::SimpleTask &task, void *pvParameters) {
+Status init_board() {
   gpio_user_led_1.write(0);
   gpio_user_led_2.write(0);
-  gpio_status_led.write(0);
-
-  se::Status stat = se::Status::OK();
-
-  se::DeviceThreadedSettings settings;
-  settings.uxStackDepth = 1024;
-  settings.uxPriority = 2;
-  settings.period = 10;
-
-  // STMEPIC_RETURN_ON_ERROR(fdcan->add_callback(CAN_BAROMETER_STATUS_FRAME_ID,
-  //                                             can_callback_bmp280_get_status,
-  //                                             bmp280.get()));
 
   ///////////////////////////////////////////////////////////////////////////
   // HERE ADD MORE OF YOUR INIT CODE
@@ -77,17 +68,6 @@ Status init_board(se::SimpleTask &task, void *pvParameters) {
   w25q.W25Q_ReadByte(&byte_read, in_page_shift, page_number);
 
   ///////////////////////////////////////////////////////////////////////////
-  return stat;
-}
-
-Status task_blink_func(se::SimpleTask &task, void *pvParameters) {
-  (void)pvParameters;
-
-  if (!task.task_get_status().ok()) {
-    gpio_status_led.toggle();
-    return task.task_get_status();
-  }
-
   return Status::OK();
 }
 
@@ -114,9 +94,12 @@ void main_prog() {
   // INIT UART HANDLERS
   STMEPIC_ASSING_TO_OR_HRESET(uart5,
                               se::UART::Make(huart5, se::HardwareType::DMA));
-  uart5->hardware_start();
+  STMEPIC_NONE_OR_HRESET(uart5->hardware_start());
 
+  ////////////////////////////////////////////////////////////////////////////////
   // INIT FDCAN HANDLER
+
+  // YOU CAN MODIFY THE FILTERS HERE if needed
   FDCAN_FilterTypeDef sFilterConfig1 = {};
   sFilterConfig1.IdType = FDCAN_EXTENDED_ID;
   sFilterConfig1.FilterIndex = 0;
@@ -158,11 +141,12 @@ void main_prog() {
   STMEPIC_ASSING_TO_OR_HRESET(
       fdcan2, se::FDCAN::Make(hfdcan2, filter_config2, nullptr, nullptr));
 
-  fdcan1->hardware_start();
-  fdcan2->hardware_start();
+  STMEPIC_NONE_OR_HRESET(fdcan1->hardware_start());
+  STMEPIC_NONE_OR_HRESET(fdcan2->hardware_start());
 
-  // START MAIN TASK
-  task_blink.task_init(task_blink_func, nullptr, 100, init_board, 3500, 2,
-                       "MainTask", false);
-  task_blink.task_run();
+  STMEPIC_ASSING_TO_OR_HRESET(
+      modu_card,
+      moducard::ModuCardBoard::Make(CAN_MODULE_BASE_ADDRESS, gpio_status_led,
+                                    fdcan1, fdcan2, init_board));
+  STMEPIC_NONE_OR_HRESET(modu_card->device_start());
 }

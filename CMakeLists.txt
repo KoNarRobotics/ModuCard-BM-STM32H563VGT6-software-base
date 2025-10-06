@@ -62,6 +62,7 @@ add_subdirectory(cmake/stm32cubemx)
 
 
 add_subdirectory(src/can_constants)
+add_subdirectory(src/ModuCard-software-base)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
