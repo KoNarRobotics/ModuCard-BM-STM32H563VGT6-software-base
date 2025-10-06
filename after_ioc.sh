@@ -7,6 +7,7 @@ main_file="Core/Src/main.c"
 main_file_cpp="Core/Src/main.cpp"
 include_file="Core/Inc/main.hpp"
 cmake_file="cmake/stm32cubemx/CMakeLists.txt"
+cmake_tool_chain_file="cmake/gcc-arm-none-eabi.cmake"
 heap_file="Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c"
 hal_config_file="Core/Inc/stm32h5xx_hal_conf.h"
 
@@ -63,7 +64,7 @@ if [ -f $main_file ]; then
   fi
 
   # Remove "-fno-rtti" from the CMake file
-  sed -i 's/-fno-rtti//g' $cmake_file
+  sed -i 's/-fno-rtti//g' $cmake_tool_chain_file
 
 
   enable_module "HAL_I2C_MODULE_ENABLED"
