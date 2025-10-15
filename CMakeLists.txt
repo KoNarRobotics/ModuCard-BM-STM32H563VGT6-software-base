@@ -20,7 +20,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME YOUR_PROJECT_NAME_HERE)
+set(CMAKE_PROJECT_NAME project_arx) #YOUR_PROJECT_NAME_HERE
 set(PROJECT_MAJOR_VERSION 0)
 
 
@@ -61,7 +61,7 @@ message(INFO "Linker flags: " ${CMAKE_C_LINK_FLAGS})
 add_subdirectory(cmake/stm32cubemx)
 
 
-add_subdirectory(src/can_constants)
+
 add_subdirectory(src/ModuCard-software-base)
 
 # Link directories setup
