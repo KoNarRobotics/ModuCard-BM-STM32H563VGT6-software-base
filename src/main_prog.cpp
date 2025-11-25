@@ -16,15 +16,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Board settings
 std::shared_ptr<moducard::ModuCardBoard> modu_card_board;
-static constexpr uint32_t CAN_MODULE_BASE_ADDRESS = 0x300;
 
 ////////////////////////////////////////////////////////////////////////////////
 // HARDWARE INTERFACES
 
 // base hardware interfaces DON'T TOUCH
-std::shared_ptr<se::UART> uart5 = nullptr;
-std::shared_ptr<se::FDCAN> fdcan1 = nullptr;
-std::shared_ptr<se::FDCAN> fdcan2 = nullptr;
+std::shared_ptr<se::UartBase> uart = nullptr;
+std::shared_ptr<se::CanBase> can1 = nullptr;
+std::shared_ptr<se::CanBase> can2 = nullptr;
 
 se::GpioPin gpio_boot_enable(*BOOT_EN_GPIO_Port, BOOT_EN_Pin);
 se::GpioPin gpio_user_led_1(*USER_LED_1_GPIO_Port, USER_LED_1_Pin);
@@ -48,29 +47,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 }
 
-Status init_board() {
-  gpio_user_led_1.write(0);
-  gpio_user_led_2.write(0);
-
-  ///////////////////////////////////////////////////////////////////////////
-  // HERE ADD MORE OF YOUR INIT CODE
-
-  se::W25qOctoSpi w25q(hospi1);
-  auto a = w25q.W25Q_Init();
-
-  uint8_t byte = 0x65;
-  uint8_t byte_read = 0;
-  uint8_t in_page_shift = 0;
-  uint8_t page_number = 0;
-  // write data
-  w25q.W25Q_ProgramByte(byte, in_page_shift, page_number);
-  // read data
-  w25q.W25Q_ReadByte(&byte_read, in_page_shift, page_number);
-
-  ///////////////////////////////////////////////////////////////////////////
-  return Status::OK();
-}
-
 void main_prog() {
   // START ALL INTERRUPTS
   HAL_NVIC_SetPriority(TIM6_IRQn, 1, 0);
@@ -91,10 +67,14 @@ void main_prog() {
   stmepic::algorithm::SHA256::get_instance().init(hhash);
   stmepic::algorithm::RandomNumberGenerator::get_instance().init(hrng);
 
+  gpio_user_led_1.write(0);
+  gpio_user_led_2.write(0);
+  gpio_status_led.write(0);
+
   // INIT UART HANDLERS
-  STMEPIC_ASSING_TO_OR_HRESET(uart5,
+  STMEPIC_ASSING_TO_OR_HRESET(uart,
                               se::UART::Make(huart5, se::HardwareType::DMA));
-  STMEPIC_NONE_OR_HRESET(uart5->hardware_start());
+  STMEPIC_NONE_OR_HRESET(uart->hardware_start());
 
   ////////////////////////////////////////////////////////////////////////////////
   // INIT FDCAN HANDLER
@@ -118,7 +98,7 @@ void main_prog() {
   filter_config1.globalFilter_RejectRemoteStd = FDCAN_FILTER_REMOTE;
   filter_config1.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
   STMEPIC_ASSING_TO_OR_HRESET(
-      fdcan1, se::FDCAN::Make(hfdcan1, filter_config1, nullptr, nullptr));
+      can1, se::FDCAN::Make(hfdcan1, filter_config1, nullptr, nullptr));
 
   FDCAN_FilterTypeDef sFilterConfig2 = {};
   sFilterConfig2.IdType = FDCAN_EXTENDED_ID;
@@ -139,14 +119,14 @@ void main_prog() {
   filter_config2.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
 
   STMEPIC_ASSING_TO_OR_HRESET(
-      fdcan2, se::FDCAN::Make(hfdcan2, filter_config2, nullptr, nullptr));
+      can2, se::FDCAN::Make(hfdcan2, filter_config2, nullptr, nullptr));
 
-  STMEPIC_NONE_OR_HRESET(fdcan1->hardware_start());
-  STMEPIC_NONE_OR_HRESET(fdcan2->hardware_start());
+  STMEPIC_NONE_OR_HRESET(can1->hardware_start());
+  STMEPIC_NONE_OR_HRESET(can2->hardware_start());
 
   STMEPIC_ASSING_TO_OR_HRESET(
       modu_card_board,
       moducard::ModuCardBoard::Make(CAN_MODULE_BASE_ADDRESS, gpio_status_led,
-                                    fdcan1, fdcan2, init_board));
+                                    can1, can2, init_board));
   STMEPIC_NONE_OR_HRESET(modu_card_board->device_start());
 }
