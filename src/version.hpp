@@ -7,7 +7,6 @@
 
 // for easy find  in a .bin file
 #define VERSION_DEF_BUILD_STRING_DEF "build_version:0.23.4"
-static const char* VERSION_DEF_BUILD_STRING = VERSION_DEF_BUILD_STRING_DEF;
-
+static const char *VERSION_DEF_BUILD_STRING = VERSION_DEF_BUILD_STRING_DEF;
 
 #endif // VERSION_HPP
