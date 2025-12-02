@@ -127,7 +127,7 @@ void main_prog() {
   STMEPIC_ASSING_TO_OR_HRESET(
       modu_card_board,
       moducard::ModuCardBoard::Make(CAN_MODULE_BASE_ADDRESS, gpio_status_led,
-                                    fdcan1, fdcan2, init_board, VERSION_MAJOR,
+                                    can1, can2, init_board, VERSION_MAJOR,
                                     VERSION_MINOR, VERSION_BUILD));
   STMEPIC_NONE_OR_HRESET(modu_card_board->device_start());
 }
