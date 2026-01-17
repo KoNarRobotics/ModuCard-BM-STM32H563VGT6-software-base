@@ -20,7 +20,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME project_arx) #YOUR_PROJECT_NAME_HERE
+set(CMAKE_PROJECT_NAME YOUR_PROJECT_NAME_HERE) #YOUR_PROJECT_NAME_HERE
 set(PROJECT_MAJOR_VERSION 0)
 
 
@@ -50,7 +50,7 @@ add_executable(${CMAKE_PROJECT_NAME})
 set(STMEPIC_FDCAN ON)
 # set(STMEPIC_GENERATE_DOCS ON)
 set(STMEPIC_MIN_VERSION_REQUIRED_ENABLED ON)
-set(STMEPIC_MIN_VERSION_REQUIRED 2.330)
+set(STMEPIC_MIN_VERSION_REQUIRED 2.379)
 
 add_subdirectory(src/StmEpic)
 
@@ -73,7 +73,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # Add user sources here
   src/main_prog.cpp
-  src/main_callbacks.cpp
+  src/module_callbacks.cpp
   src/module.cpp
 
   # src/quadspi/Dev_Inf.c
