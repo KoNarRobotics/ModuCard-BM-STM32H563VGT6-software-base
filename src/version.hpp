@@ -3,11 +3,10 @@
 
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 23
-#define VERSION_BUILD 3
+#define VERSION_BUILD 4
 
 // for easy find  in a .bin file
-#define VERSION_DEF_BUILD_STRING_DEF "build_version:0.23.3"
-static const char* VERSION_DEF_BUILD_STRING = VERSION_DEF_BUILD_STRING_DEF;
-
+#define VERSION_DEF_BUILD_STRING_DEF "build_version:0.23.4"
+static const char *VERSION_DEF_BUILD_STRING = VERSION_DEF_BUILD_STRING_DEF;
 
 #endif // VERSION_HPP
